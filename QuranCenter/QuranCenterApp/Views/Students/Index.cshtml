@@ -1,0 +1,80 @@
+@model IEnumerable<QuranCenterApp.Models.Student>
+@{
+    ViewData["Title"] = "الطلاب";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-people me-2" style="color:var(--gold)"></i>قائمة الطلاب</h2>
+        <p class="page-subtitle">إدارة بيانات الطلاب المسجّلين في المركز</p>
+    </div>
+    <a asp-action="Create" class="btn btn-gold px-4"><i class="bi bi-person-plus me-1"></i>إضافة طالب</a>
+</div>
+
+<!-- بحث -->
+<div class="card mb-4">
+    <div class="card-body py-2">
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="البحث بالاسم أو البريد الإلكتروني..." />
+            <button type="submit" class="btn btn-gold"><i class="bi bi-search"></i></button>
+            <a asp-action="Index" class="btn btn-outline-secondary">مسح</a>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الاسم الكامل</th>
+                        <th>الجنس</th>
+                        <th>تاريخ الميلاد</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>المستوى</th>
+                        <th>تاريخ التسجيل</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="8" class="text-center py-4" style="color:var(--text-muted)">لا يوجد طلاب.</td></tr>
+                    }
+                    @foreach (var s in Model)
+                    {
+                        <tr>
+                            <td style="color:var(--text-muted)">@s.StudentID</td>
+                            <td>
+                                <i class="bi bi-person-circle me-1" style="color:var(--gold)"></i>
+                                @s.Person.FirstName @s.Person.LastName
+                            </td>
+                            <td>@(s.Person.Gender == "M" ? "ذكر" : "أنثى")</td>
+                            <td>@s.Person.DateOfBirth.ToString("dd/MM/yyyy")</td>
+                            <td dir="ltr">@(s.Person.Email ?? "-")</td>
+                            <td>
+                                @{
+                                    var (levelAr, levelCss) = s.Level switch {
+                                        "Advanced"     => ("متقدم",  "background:#1a6b3a;color:#fff"),
+                                        "Intermediate" => ("متوسط",  "background:#c8a84b;color:#0d2818"),
+                                        _              => ("مبتدئ",  "background:#4a4a6a;color:#fff")
+                                    };
+                                }
+                                <span class="badge" style="@levelCss">@levelAr</span>
+                            </td>
+                            <td>@s.EnrollmentDate.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@s.StudentID" class="btn btn-sm btn-outline-info me-1" title="تفاصيل"><i class="bi bi-eye"></i></a>
+                                <a asp-action="Edit"    asp-route-id="@s.StudentID" class="btn btn-sm btn-outline-warning me-1" title="تعديل"><i class="bi bi-pencil"></i></a>
+                                <a asp-action="Delete"  asp-route-id="@s.StudentID" class="btn btn-sm btn-outline-danger" title="حذف"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small">الإجمالي: @Model.Count() طالب</div>
+</div>

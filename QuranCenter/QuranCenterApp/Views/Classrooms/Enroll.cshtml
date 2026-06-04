@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "تسجيل طالب في فصل";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-person-plus me-2" style="color:var(--gold)"></i>تسجيل طالب</h2>
+        <p class="page-subtitle">الفصل: @ViewBag.ClassroomName</p>
+    </div>
+    <a asp-action="Details" asp-route-id="@ViewBag.ClassroomID" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-right me-1"></i>رجوع
+    </a>
+</div>
+
+<div class="card" style="max-width:500px">
+    <div class="card-header" style="color:var(--gold)">
+        <i class="bi bi-people me-2"></i>
+        المقاعد: @ViewBag.CurrentCount / @ViewBag.MaxSize
+        &nbsp;|&nbsp; المستوى المطلوب:
+        <span class="badge" style="background:var(--gold);color:var(--bg-dark)">@ViewBag.RequiredLevel</span>
+        @if (ViewBag.CurrentCount >= ViewBag.MaxSize)
+        {
+            <span class="badge bg-danger ms-2">ممتلئ</span>
+        }
+        else
+        {
+            <span class="badge bg-success ms-2">متاح</span>
+        }
+    </div>
+    <div class="card-body">
+        @if (ViewBag.CurrentCount >= ViewBag.MaxSize)
+        {
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>الفصل وصل الحد الأقصى من الطلاب.
+            </div>
+        }
+        else if (ViewBag.Students != null && ((IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Students).Any())
+        {
+            <form asp-action="Enroll" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="classroomId" value="@ViewBag.ClassroomID" />
+                <div class="mb-3">
+                    <label class="form-label">اختر الطالب</label>
+                    <select name="studentId" class="form-select" required>
+                        <option value="">-- اختر طالباً --</option>
+                        @foreach (var item in (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Students)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-gold px-4">
+                    <i class="bi bi-person-plus me-1"></i>تسجيل
+                </button>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                لا يوجد طلاب مؤهّلون للانضمام لهذا الفصل.
+                <br><small>يشترط المستوى <strong>@ViewBag.RequiredLevel</strong> والانتهاء من فصل سابق (للمستويات المتقدمة).</small>
+            </div>
+        }
+    </div>
+</div>

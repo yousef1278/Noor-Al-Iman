@@ -1,0 +1,54 @@
+@model IEnumerable<QuranCenterApp.Models.Student>
+@{
+    ViewData["Title"] = "Students With No Gifts";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold"><i class="bi bi-search me-2 text-warning"></i>Students With No Gifts</h2>
+    <a asp-action="Distribute" class="btn btn-danger"><i class="bi bi-gift me-1"></i>Distribute Gift</a>
+</div>
+
+<div class="alert alert-info">
+    <i class="bi bi-info-circle me-2"></i>
+    The following <strong>@Model.Count()</strong> students have never received a gift. Consider rewarding them for their progress!
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Student Name</th>
+                    <th>Level</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-success py-4">
+                            <i class="bi bi-check-circle me-2"></i>All students have received gifts!
+                        </td>
+                    </tr>
+                }
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td>@s.StudentID</td>
+                        <td>@s.Person.FirstName @s.Person.LastName</td>
+                        <td><span class="badge bg-secondary">@s.Level</span></td>
+                        <td>@(s.Person.Email ?? "-")</td>
+                        <td>
+                            <a asp-controller="Gifts" asp-action="Distribute" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-gift me-1"></i>Give Gift
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

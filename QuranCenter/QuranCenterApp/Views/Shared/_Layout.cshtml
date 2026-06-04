@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - مركز القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.min.css" />
+    <style>
+        :root {
+            --bg-dark:    #0d2818;
+            --bg-card:    #132d1e;
+            --bg-sidebar: #0f2318;
+            --bg-row:     #1a3a28;
+            --gold:       #c8a84b;
+            --gold-hover: #e0c060;
+            --text-main:  #e8f5ee;
+            --text-muted: #7aad8f;
+            --border:     #1f4030;
+        }
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            margin: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cg fill='none' stroke='%23c8a84b' stroke-width='0.7' opacity='0.13'%3E%3Cpolygon points='50,12 56,35.5 76.9,23.1 64.5,44 88,50 64.5,56 76.9,76.9 56,64.5 50,88 44,64.5 23.1,76.9 35.5,56 12,50 35.5,44 23.1,23.1 44,35.5'/%3E%3Cpolygon points='56,35.5 64.5,44 64.5,56 56,64.5 44,64.5 35.5,56 35.5,44 44,35.5'/%3E%3Cline x1='0' y1='0' x2='23' y2='23'/%3E%3Cline x1='100' y1='0' x2='77' y2='23'/%3E%3Cline x1='100' y1='100' x2='77' y2='77'/%3E%3Cline x1='0' y1='100' x2='23' y2='77'/%3E%3Cline x1='50' y1='0' x2='50' y2='12'/%3E%3Cline x1='100' y1='50' x2='88' y2='50'/%3E%3Cline x1='50' y1='100' x2='50' y2='88'/%3E%3Cline x1='0' y1='50' x2='12' y2='50'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 100px 100px;
+        }
+
+        /* ── TOP NAVBAR ── */
+        .top-navbar {
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .top-navbar .brand { color: var(--text-main); font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        .top-navbar .brand i { color: var(--gold); font-size: 1.3rem; }
+        .top-navbar .nav-links { display: flex; gap: 4px; align-items: center; }
+        .top-navbar .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all .2s;
+        }
+        .top-navbar .nav-links a:hover { color: var(--text-main); background: var(--bg-row); }
+
+        /* ── LAYOUT ── */
+        .layout-wrapper { display: flex; min-height: calc(100vh - 56px); }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 220px;
+            min-height: 100%;
+            background: var(--bg-sidebar);
+            border-left: 1px solid var(--border);
+            padding: 24px 0;
+            flex-shrink: 0;
+        }
+        .sidebar-logo {
+            text-align: center;
+            padding: 0 16px 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+        .sidebar-logo .logo-circle {
+            width: 56px; height: 56px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .sidebar-logo .logo-circle i { color: var(--bg-dark); font-size: 1.5rem; }
+        .sidebar-logo p { color: var(--text-muted); font-size: 0.8rem; margin: 0; }
+
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+        .sidebar-menu li a {
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 20px;
+            color: var(--text-muted) !important;
+            text-decoration: none !important;
+            font-size: 0.9rem;
+            border-right: 3px solid transparent;
+            transition: all .2s;
+        }
+        .sidebar-menu li a i { font-size: 1rem; width: 20px; flex-shrink: 0; }
+        .sidebar-menu li a:hover {
+            color: var(--text-main) !important;
+            background: var(--bg-row);
+            border-right-color: var(--gold);
+        }
+        .sidebar-menu li a.active {
+            color: var(--gold) !important;
+            background: rgba(200,168,75,.12);
+            border-right-color: var(--gold);
+            font-weight: 600;
+        }
+        .sidebar-divider { border-color: var(--border); margin: 8px 16px; }
+
+        /* ── MAIN CONTENT ── */
+        .main-content { flex: 1; padding: 28px 32px; overflow-x: hidden; }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 12px;
+            color: var(--text-main);
+        }
+        .card-header {
+            background: var(--bg-row) !important;
+            border-bottom: 1px solid var(--border) !important;
+            border-radius: 12px 12px 0 0 !important;
+            color: var(--text-main) !important;
+            font-weight: 600;
+        }
+        .card-footer {
+            background: var(--bg-row) !important;
+            border-top: 1px solid var(--border) !important;
+            color: var(--text-muted) !important;
+        }
+
+        /* ── TABLE ── */
+        .table {
+            color: #ffffff !important;
+            --bs-table-bg: transparent;
+            --bs-table-color: #ffffff;
+            --bs-table-striped-bg: transparent;
+            --bs-table-hover-bg: var(--bg-row);
+        }
+        .table thead th {
+            background: var(--bg-row) !important;
+            color: var(--gold) !important;
+            border-color: var(--border) !important;
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+        .table td { color: #ffffff !important; border-color: var(--border) !important; vertical-align: middle; }
+        .table th { border-color: var(--border) !important; vertical-align: middle; }
+        .table tbody tr:hover { background: rgba(255,255,255,.05) !important; }
+        .table tbody tr:hover td { color: #ffffff !important; }
+
+        /* ── BUTTONS ── */
+        .btn-gold { background: var(--gold); color: var(--bg-dark); border: none; font-weight: 600; }
+        .btn-gold:hover { background: var(--gold-hover); color: var(--bg-dark); }
+        .btn-outline-gold { border: 1px solid var(--gold); color: var(--gold); background: transparent; }
+        .btn-outline-gold:hover { background: var(--gold); color: var(--bg-dark); }
+        .btn-primary { background: var(--gold) !important; border-color: var(--gold) !important; color: var(--bg-dark) !important; font-weight: 600; }
+        .btn-primary:hover { background: var(--gold-hover) !important; border-color: var(--gold-hover) !important; }
+
+        /* ── DATE INPUTS: flatpickr forces dd/mm/yyyy regardless of OS language ── */
+        input[type="date"] { direction: ltr !important; text-align: left !important; font-family: monospace, sans-serif; }
+        .flatpickr-input { direction: ltr !important; text-align: left !important; font-family: monospace, sans-serif; }
+        /* flatpickr calendar theme overrides */
+        .flatpickr-calendar { background: #132d1e !important; border-color: #1f4030 !important; color: #e8f5ee !important; box-shadow: 0 4px 20px rgba(0,0,0,.5) !important; }
+        .flatpickr-months { background: #0f2318 !important; border-radius: 5px 5px 0 0; }
+        .flatpickr-months .flatpickr-month { background: #0f2318 !important; color: #c8a84b !important; fill: #c8a84b !important; }
+        .flatpickr-current-month { color: #c8a84b !important; }
+        .flatpickr-current-month .numInputWrapper span.arrowUp:after { border-bottom-color: #c8a84b !important; }
+        .flatpickr-current-month .numInputWrapper span.arrowDown:after { border-top-color: #c8a84b !important; }
+        .flatpickr-current-month select.flatpickr-monthDropdown-months { color: #c8a84b !important; background: #0f2318 !important; }
+        .flatpickr-weekdays { background: #0f2318 !important; }
+        span.flatpickr-weekday { background: #0f2318 !important; color: #c8a84b !important; }
+        .flatpickr-day { color: #e8f5ee !important; border-color: transparent !important; }
+        .flatpickr-day:hover { background: #1a3a28 !important; border-color: #1a3a28 !important; }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover { background: #c8a84b !important; border-color: #c8a84b !important; color: #0d2818 !important; }
+        .flatpickr-day.today { border-color: #c8a84b !important; }
+        .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay { color: #3a6a4a !important; }
+        .flatpickr-prev-month svg, .flatpickr-next-month svg { fill: #c8a84b !important; }
+        .flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { fill: #e0c060 !important; }
+        .numInputWrapper:hover { background: #1a3a28 !important; }
+        .numInputWrapper input { color: #c8a84b !important; }
+
+        /* ── OUTLINE BUTTONS (table actions only - small buttons) ── */
+        .btn-sm.btn-outline-warning  { color: #ffc107 !important; border-color: #ffc107 !important; background: transparent !important; }
+        .btn-sm.btn-outline-danger   { color: #dc3545 !important; border-color: #dc3545 !important; background: transparent !important; }
+        .btn-sm.btn-outline-info     { color: #0dcaf0 !important; border-color: #0dcaf0 !important; background: transparent !important; }
+        .btn-sm.btn-outline-warning:hover { background: rgba(255,193,7,.2)  !important; }
+        .btn-sm.btn-outline-danger:hover  { background: rgba(220,53,69,.2)  !important; }
+        .btn-sm.btn-outline-info:hover    { background: rgba(13,202,240,.2) !important; }
+
+        /* ── REGULAR OUTLINE BUTTONS (keep original Bootstrap colors) ── */
+        .btn-outline-secondary { color: #adb5bd !important; border-color: #adb5bd !important; }
+        .btn-outline-secondary:hover { background: rgba(173,181,189,.15) !important; color: #fff !important; }
+
+        /* ── FORMS ── */
+        .form-control, .form-select {
+            background: var(--bg-row) !important;
+            border: 1px solid var(--border) !important;
+            color: var(--text-main) !important;
+            border-radius: 8px;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--gold) !important;
+            box-shadow: 0 0 0 3px rgba(200,168,75,.2) !important;
+        }
+        .form-control::placeholder { color: var(--text-muted) !important; }
+        .form-label { color: #fff !important; font-size: 0.9rem; margin-bottom: 4px; font-weight: 500; }
+
+        /* ── STAT CARDS ── */
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stat-card .stat-num { font-size: 2rem; font-weight: 700; color: var(--gold); }
+        .stat-card .stat-label { color: var(--text-muted); font-size: 0.85rem; margin: 0; }
+        .stat-card .stat-icon { font-size: 2rem; color: var(--gold); opacity: .4; }
+
+        /* ── ALERTS ── */
+        .alert-success { background: rgba(26,107,58,.3) !important; border-color: #2d9a57 !important; color: #7aff9f !important; }
+        .alert-danger  { background: rgba(180,30,30,.3) !important; border-color: #dc3545 !important; color: #ff8888 !important; }
+        .alert-info    { background: rgba(13,110,253,.2) !important; border-color: #0d6efd !important; color: #8bb4ff !important; }
+        .alert-warning { background: rgba(200,168,75,.2) !important; border-color: var(--gold) !important; color: var(--gold) !important; }
+
+        /* ── BADGES ── */
+        .badge { font-size: 0.78rem; }
+
+        /* ── PAGE HEADER ── */
+        .page-title { font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .page-subtitle { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* ── ISLAMIC DECORATIONS ── */
+        .islamic-divider {
+            text-align: center;
+            color: var(--gold);
+            font-size: 1rem;
+            margin: 8px 0;
+            letter-spacing: 6px;
+            opacity: 0.7;
+        }
+        .card-header::before {
+            content: '✦ ';
+            color: var(--gold);
+            opacity: 0.6;
+            font-size: 0.75rem;
+        }
+        .card-header::after {
+            content: ' ✦';
+            color: var(--gold);
+            opacity: 0.6;
+            font-size: 0.75rem;
+        }
+        .top-navbar .brand::before { content: '☪ '; font-size: 1.1rem; color: var(--gold); }
+        .sidebar-decor {
+            text-align: center;
+            color: var(--gold);
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            padding: 4px 0;
+            opacity: 0.6;
+        }
+        .page-title::after {
+            content: ' ✦';
+            color: var(--gold);
+            font-size: 1rem;
+            opacity: 0.5;
+        }
+        .bismillah {
+            text-align: center;
+            color: var(--gold);
+            font-size: 1.1rem;
+            padding: 6px 0;
+            letter-spacing: 2px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 8px;
+        }
+        footer::before { content: '✦  ☪  ✦  '; color: var(--gold); opacity: 0.5; }
+        footer::after  { content: '  ✦  ☪  ✦'; color: var(--gold); opacity: 0.5; }
+
+        /* ── FOOTER ── */
+        footer { background: var(--bg-sidebar); border-top: 1px solid var(--border); color: var(--text-muted); padding: 12px 0; text-align: center; font-size: 0.82rem; }
+
+        /* ── PROGRESS ── */
+        .progress { background: var(--bg-row) !important; }
+
+        /* ── DL ── */
+        dt { color: var(--text-muted) !important; }
+        dd { color: var(--text-main) !important; }
+
+        @@media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { padding: 16px; }
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+
+<!-- TOP NAVBAR -->
+<div class="top-navbar">
+    <div class="brand">
+        <i class="bi bi-book-half"></i>
+        مركز تحفيظ القرآن الكريم
+    </div>
+    <div class="nav-links">
+        <a asp-controller="Students"    asp-action="Index"><i class="bi bi-people me-1"></i>الطلاب</a>
+        <a asp-controller="Teachers"    asp-action="Index"><i class="bi bi-person-badge me-1"></i>المعلمون</a>
+        <a asp-controller="Classrooms"  asp-action="Index"><i class="bi bi-door-open me-1"></i>الفصول</a>
+        <a asp-controller="Attendance"  asp-action="Index"><i class="bi bi-calendar-check me-1"></i>الحضور</a>
+        <a asp-controller="Memorization" asp-action="Index"><i class="bi bi-bookmark-star me-1"></i>الحفظ</a>
+        <a asp-controller="Gifts"       asp-action="Index"><i class="bi bi-gift me-1"></i>الهدايا</a>
+    </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout-wrapper">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <div class="bismillah">بِسْمِ اللَّهِ</div>
+            <div class="logo-circle"><i class="bi bi-book-half"></i></div>
+            <p>نظام إدارة المركز</p>
+            <div class="sidebar-decor">☾ ✦ ☽</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a asp-controller="Home"        asp-action="Index">       <i class="bi bi-speedometer2"></i> لوحة التحكم</a></li>
+            <li><a asp-controller="Students"    asp-action="Index">       <i class="bi bi-people"></i> الطلاب</a></li>
+            <li><a asp-controller="Teachers"    asp-action="Index">       <i class="bi bi-person-badge"></i> المعلمون</a></li>
+            <li><a asp-controller="Classrooms"  asp-action="Index">       <i class="bi bi-door-open"></i> الفصول</a></li>
+            <li><a asp-controller="Attendance"  asp-action="Index">       <i class="bi bi-calendar-check"></i> الحضور</a></li>
+            <li><a asp-controller="Memorization" asp-action="Index">      <i class="bi bi-bookmark-star"></i> سجل الحفظ</a></li>
+            <hr class="sidebar-divider" />
+            <li><a asp-controller="Supervisors"  asp-action="Index">       <i class="bi bi-shield-check"></i> المشرفون</a></li>
+            <li><a asp-controller="Gifts"       asp-action="Index">       <i class="bi bi-gift"></i> الهدايا</a></li>
+            <li><a asp-controller="Gifts"       asp-action="Distributions"><i class="bi bi-box-seam"></i> التوزيعات</a></li>
+            <li><a asp-controller="Gifts"       asp-action="StudentsWithNoGifts"><i class="bi bi-search"></i> بدون هدايا</a></li>
+        </ul>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mb-3">
+                <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show mb-3">
+                <i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @RenderBody()
+    </main>
+</div>
+
+<footer>
+    مركز تحفيظ القرآن الكريم &copy; 2026 | مشروع برمجة قواعد البيانات - جامعة عمان العربية
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('input[type="date"]').forEach(function (input) {
+        flatpickr(input, {
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'd/m/Y',
+            allowInput: true,
+            disableMobile: true,
+            onReady: function (_, __, fp) {
+                if (fp.altInput) {
+                    fp.altInput.setAttribute('dir', 'ltr');
+                    fp.altInput.style.direction = 'ltr';
+                    fp.altInput.style.textAlign = 'left';
+                    fp.altInput.style.fontFamily = 'monospace, sans-serif';
+                    fp.altInput.className = input.className;
+                }
+            }
+        });
+    });
+});
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

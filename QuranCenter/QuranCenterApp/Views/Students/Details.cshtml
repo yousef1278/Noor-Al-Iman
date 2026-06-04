@@ -1,0 +1,132 @@
+@model QuranCenterApp.Models.Student
+@{
+    ViewData["Title"] = "Student Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold"><i class="bi bi-person-lines-fill me-2 text-success"></i>Student Profile</h2>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.StudentID" class="btn btn-warning me-2">
+            <i class="bi bi-pencil me-1"></i>Edit
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Back</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body py-4">
+                <div class="rounded-circle bg-success d-inline-flex align-items-center justify-content-center mb-3"
+                     style="width:80px;height:80px">
+                    <i class="bi bi-person text-white fs-1"></i>
+                </div>
+                <h4 class="fw-bold">@Model.Person.FirstName @Model.Person.LastName</h4>
+                <span class="badge @(Model.Level=="Advanced"?"bg-success":Model.Level=="Intermediate"?"bg-warning text-dark":"bg-secondary") fs-6">
+                    @Model.Level
+                </span>
+                <hr />
+                <div class="text-start">
+                    <p class="mb-1"><i class="bi bi-envelope me-2 text-muted"></i>@(Model.Person.Email ?? "N/A")</p>
+                    <p class="mb-1"><i class="bi bi-calendar me-2 text-muted"></i>@Model.Person.DateOfBirth.ToString("dd/MM/yyyy")</p>
+                    <p class="mb-1"><i class="bi bi-geo-alt me-2 text-muted"></i>@(Model.Person.Address ?? "N/A")</p>
+                    <p class="mb-1"><i class="bi bi-gender-ambiguous me-2 text-muted"></i>@(Model.Person.Gender == "M" ? "Male" : "Female")</p>
+                    @foreach (var ph in Model.Person.PhoneNumbers)
+                    {
+                        <p class="mb-1"><i class="bi bi-telephone me-2 text-muted"></i>@ph.Phone</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <!-- Enrollments -->
+        <div class="card mb-3">
+            <div class="card-header bg-success text-white">
+                <i class="bi bi-door-open me-2"></i>Enrolled Classrooms (@Model.Enrollments.Count)
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Classroom</th><th>Curriculum</th><th>Enrolled On</th></tr></thead>
+                    <tbody>
+                        @if (!Model.Enrollments.Any())
+                        {
+                            <tr><td colspan="3" class="text-center text-muted py-3">Not enrolled in any classroom</td></tr>
+                        }
+                        @foreach (var e in Model.Enrollments)
+                        {
+                            <tr>
+                                <td>@e.Classroom.ClassroomName</td>
+                                <td>@e.Classroom.Curriculum.CurriculumName</td>
+                                <td>@e.EnrollmentDate.ToString("dd/MM/yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Memorization -->
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-bookmark-star me-2"></i>Memorization Records (@Model.Memorizations.Count)
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Surah</th><th>Ayahs</th><th>Date</th><th>Rating</th></tr></thead>
+                    <tbody>
+                        @if (!Model.Memorizations.Any())
+                        {
+                            <tr><td colspan="4" class="text-center text-muted py-3">No memorization records</td></tr>
+                        }
+                        @foreach (var m in Model.Memorizations)
+                        {
+                            <tr>
+                                <td>@m.SurahName</td>
+                                <td>@m.FromAyah - @m.ToAyah</td>
+                                <td>@m.DateCompleted.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    @if (m.Rating.HasValue)
+                                    {
+                                        for (int i = 1; i <= 5; i++)
+                                        {
+                                            <i class="bi bi-star@(i <= m.Rating ? "-fill text-warning" : " text-muted")"></i>
+                                        }
+                                    }
+                                    else { <span class="text-muted">-</span> }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Gifts -->
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <i class="bi bi-gift me-2"></i>Gifts Received (@Model.GiftDistributions.Count)
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead><tr><th>Gift</th><th>Type</th><th>Date</th></tr></thead>
+                    <tbody>
+                        @if (!Model.GiftDistributions.Any())
+                        {
+                            <tr><td colspan="3" class="text-center text-muted py-3">No gifts received</td></tr>
+                        }
+                        @foreach (var gd in Model.GiftDistributions)
+                        {
+                            <tr>
+                                <td>@gd.Gift.GiftName</td>
+                                <td>@gd.Gift.GiftType</td>
+                                <td>@gd.DateReceived.ToString("dd/MM/yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

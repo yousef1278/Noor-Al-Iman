@@ -1,0 +1,111 @@
+@model QuranCenterApp.Models.Classroom
+@{
+    ViewData["Title"] = "تفاصيل الفصل";
+    var enrolled = Model.Enrollments.Count;
+    var pct = Model.MaxSize > 0 ? (enrolled * 100 / Model.MaxSize) : 0;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-door-open me-2" style="color:var(--gold)"></i>@Model.ClassroomName</h2>
+        <p class="page-subtitle">@Model.Curriculum.CurriculumName</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Enroll" asp-route-id="@Model.ClassroomID" class="btn btn-gold">
+            <i class="bi bi-person-plus me-1"></i>تسجيل طالب
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.ClassroomID" class="btn btn-outline-secondary">
+            <i class="bi bi-pencil me-1"></i>تعديل
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-right me-1"></i>رجوع
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header" style="color:var(--gold)"><i class="bi bi-info-circle me-2"></i>معلومات الفصل</div>
+            <div class="card-body">
+                <p><i class="bi bi-book me-2" style="color:var(--text-muted)"></i><strong>المنهج:</strong> @Model.Curriculum.CurriculumName</p>
+                <p><i class="bi bi-tag me-2" style="color:var(--text-muted)"></i><strong>الفئة:</strong> @Model.Curriculum.Category</p>
+                <p><i class="bi bi-person-badge me-2" style="color:var(--text-muted)"></i><strong>المعلم:</strong> @Model.Teacher.Person.FirstName @Model.Teacher.Person.LastName</p>
+                @if (Model.Supervisor != null)
+                {
+                    <p><i class="bi bi-shield me-2" style="color:var(--text-muted)"></i><strong>المشرف:</strong> @Model.Supervisor.Person.FirstName @Model.Supervisor.Person.LastName</p>
+                }
+                <hr style="border-color:var(--border)" />
+                <p class="mb-1"><i class="bi bi-people me-2" style="color:var(--text-muted)"></i><strong>السعة:</strong> @enrolled / @Model.MaxSize</p>
+                <div class="progress mt-2" style="height:8px">
+                    <div class="progress-bar @(pct>=90?"bg-danger":pct>=70?"bg-warning":"bg-success")"
+                         style="width:@pct%"></div>
+                </div>
+                <small style="color:var(--text-muted)">@pct% ممتلئ</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center" style="color:var(--gold)">
+                <span><i class="bi bi-people me-2"></i>الطلاب المسجّلون (@enrolled)</span>
+                @if (enrolled < Model.MaxSize)
+                {
+                    <a asp-action="Enroll" asp-route-id="@Model.ClassroomID" class="btn btn-sm btn-gold">
+                        <i class="bi bi-plus me-1"></i>إضافة طالب
+                    </a>
+                }
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>الطالب</th>
+                            <th>المستوى</th>
+                            <th>تاريخ التسجيل</th>
+                            <th>إلغاء التسجيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Enrollments.Any())
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center py-4" style="color:var(--text-muted)">
+                                    لا يوجد طلاب مسجّلون.
+                                    <a asp-action="Enroll" asp-route-id="@Model.ClassroomID" class="btn btn-sm btn-gold ms-2">
+                                        <i class="bi bi-person-plus me-1"></i>سجّل الآن
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        @foreach (var e in Model.Enrollments)
+                        {
+                            <tr>
+                                <td>
+                                    <i class="bi bi-person-circle me-1" style="color:var(--gold)"></i>
+                                    @e.Student.Person.FirstName @e.Student.Person.LastName
+                                </td>
+                                <td>
+                                    <span class="badge" style="background:var(--bg-row);color:var(--gold)">@e.Student.Level</span>
+                                </td>
+                                <td>@e.EnrollmentDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <form asp-action="Unenroll" method="post" style="display:inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="enrollmentId" value="@e.EnrollmentID" />
+                                        <input type="hidden" name="classroomId" value="@Model.ClassroomID" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('إلغاء تسجيل هذا الطالب؟')">
+                                            <i class="bi bi-person-dash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

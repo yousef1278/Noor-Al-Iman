@@ -1,0 +1,61 @@
+@model IEnumerable<QuranCenterApp.Models.GiftDistribution>
+@{
+    ViewData["Title"] = "سجل التوزيعات";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-box-seam me-2" style="color:var(--gold)"></i>سجل توزيع الهدايا</h2>
+        <p class="page-subtitle">جميع الهدايا الموزعة على الطلاب</p>
+    </div>
+    <a asp-action="Distribute" class="btn btn-gold px-4">
+        <i class="bi bi-gift me-1"></i>توزيع هدية جديدة
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الهدية</th>
+                        <th>النوع</th>
+                        <th>الطالب</th>
+                        <th>تاريخ الاستلام</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-4" style="color:var(--text-muted)">
+                                لا توجد توزيعات مسجّلة.
+                                <a asp-action="Distribute" class="btn btn-sm btn-gold ms-2">وزّع الآن</a>
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var d in Model)
+                    {
+                        <tr>
+                            <td style="color:var(--text-muted)">@d.DistributionID</td>
+                            <td>
+                                <i class="bi bi-gift me-1" style="color:var(--gold)"></i>
+                                @d.Gift.GiftName
+                            </td>
+                            <td>
+                                <span class="badge" style="background:var(--bg-row);color:var(--gold);border:1px solid var(--border)">
+                                    @d.Gift.GiftType
+                                </span>
+                            </td>
+                            <td>@d.Student.Person.FirstName @d.Student.Person.LastName</td>
+                            <td>@d.DateReceived.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer small">الإجمالي: @Model.Count() توزيع</div>
+</div>

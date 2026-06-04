@@ -1,0 +1,77 @@
+@model QuranCenterApp.Models.Attendance
+@{
+    ViewData["Title"] = "تسجيل حضور";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-calendar-plus me-2" style="color:var(--gold)"></i>تسجيل حضور</h2>
+        <p class="page-subtitle">تسجيل حضور وغياب الطلاب</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-right me-1"></i>رجوع</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-calendar-check me-2" style="color:var(--gold)"></i>تفاصيل الحضور
+    </div>
+    <div class="card-body">
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+
+        <form asp-action="Create" method="post">
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label">الطالب <span style="color:#ff6b6b">*</span></label>
+                    <select asp-for="StudentID" asp-items="ViewBag.StudentID" class="form-select">
+                        <option value="">-- اختر الطالب --</option>
+                    </select>
+                    <span asp-validation-for="StudentID" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">الفصل الدراسي <span style="color:#ff6b6b">*</span></label>
+                    <select asp-for="ClassroomID" asp-items="ViewBag.ClassroomID" class="form-select">
+                        <option value="">-- اختر الفصل --</option>
+                    </select>
+                    <span asp-validation-for="ClassroomID" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">التاريخ <span style="color:#ff6b6b">*</span></label>
+                    <input asp-for="AttendanceDate" type="date" lang="en-GB" dir="ltr" class="form-control" />
+                    <span asp-validation-for="AttendanceDate" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">الحالة <span style="color:#ff6b6b">*</span></label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="P">حاضر</option>
+                        <option value="A">غائب</option>
+                        <option value="L">متأخر</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-8">
+                    <label class="form-label">ملاحظات <span style="color:var(--text-muted);font-weight:400">اختياري</span></label>
+                    <input asp-for="Notes" class="form-control" placeholder="ملاحظات اختيارية..." />
+                    <span asp-validation-for="Notes" class="text-danger small"></span>
+                </div>
+
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-gold px-4">
+                    <i class="bi bi-save me-1"></i>حفظ
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

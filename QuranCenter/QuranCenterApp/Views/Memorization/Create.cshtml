@@ -1,0 +1,99 @@
+@model QuranCenterApp.Models.Memorization
+@{
+    ViewData["Title"] = "إضافة سجل حفظ";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-bookmark-plus me-2" style="color:var(--gold)"></i>إضافة سجل حفظ</h2>
+        <p class="page-subtitle">تسجيل تقدم الطالب في حفظ القرآن الكريم</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-right me-1"></i>رجوع</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-bookmark-star me-2" style="color:var(--gold)"></i>تفاصيل السجل
+    </div>
+    <div class="card-body">
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+
+        <form asp-action="Create" method="post" id="memForm">
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">الطالب <span style="color:#ff6b6b">*</span></label>
+                    <select asp-for="StudentID" asp-items="ViewBag.StudentID" class="form-select">
+                        <option value="">-- اختر الطالب --</option>
+                    </select>
+                    <span asp-validation-for="StudentID" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">اسم السورة <span style="color:#ff6b6b">*</span></label>
+                    <input asp-for="SurahName" class="form-control" placeholder="مثال: الفاتحة" list="surahList" autocomplete="off" />
+                    <datalist id="surahList">
+                        <option value="الفاتحة" /><option value="البقرة" /><option value="آل عمران" />
+                        <option value="النساء" /><option value="المائدة" /><option value="الأنعام" />
+                        <option value="الكهف" /><option value="يس" /><option value="الملك" />
+                        <option value="الناس" /><option value="الفلق" /><option value="الإخلاص" />
+                        <option value="الضحى" /><option value="الشرح" /><option value="العلق" />
+                        <option value="Al-Fatiha" /><option value="Al-Baqara" /><option value="Al-Imran" />
+                    </datalist>
+                    <span asp-validation-for="SurahName" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">من الآية <span style="color:#ff6b6b">*</span></label>
+                    <input type="number" id="FromAyah" name="FromAyah"
+                           min="1" max="286" class="form-control" placeholder="1"
+                           data-val="true"
+                           data-val-required="حقل من الآية مطلوب"
+                           data-val-range="يجب أن تكون بين 1 و 286"
+                           data-val-range-min="1" data-val-range-max="286" />
+                    <span data-valmsg-for="FromAyah" data-valmsg-replace="true" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">إلى الآية <span style="color:#ff6b6b">*</span></label>
+                    <input type="number" id="ToAyah" name="ToAyah"
+                           min="1" max="286" class="form-control" placeholder="7"
+                           data-val="true"
+                           data-val-required="حقل إلى الآية مطلوب"
+                           data-val-range="يجب أن تكون بين 1 و 286"
+                           data-val-range-min="1" data-val-range-max="286" />
+                    <span data-valmsg-for="ToAyah" data-valmsg-replace="true" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">تاريخ الإتمام <span style="color:#ff6b6b">*</span></label>
+                    <input asp-for="DateCompleted" type="date" lang="en-GB" dir="ltr" class="form-control" />
+                    <span asp-validation-for="DateCompleted" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">التقييم (1-5) <span style="color:var(--text-muted);font-weight:400">اختياري</span></label>
+                    <input type="number" id="Rating" name="Rating"
+                           min="1" max="5" class="form-control" placeholder="اتركه فارغاً إن لم تشأ"
+                           data-val="true"
+                           data-val-range="يجب أن يكون التقييم بين 1 و 5"
+                           data-val-range-min="1" data-val-range-max="5" />
+                    <span data-valmsg-for="Rating" data-valmsg-replace="true" class="text-danger small"></span>
+                </div>
+
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-gold px-4">
+                    <i class="bi bi-save me-1"></i>حفظ
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

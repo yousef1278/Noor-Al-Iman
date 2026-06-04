@@ -1,0 +1,134 @@
+@{
+    ViewData["Title"] = "لوحة التحكم";
+}
+
+<!-- Islamic header decoration -->
+<div class="text-center mb-3" style="color:var(--gold);font-size:1.2rem;letter-spacing:8px;opacity:.6">
+    ✦ &nbsp; ☪ &nbsp; ✦ &nbsp; ☽ &nbsp; ✦
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-speedometer2 me-2" style="color:var(--gold)"></i>لوحة التحكم</h2>
+        <p class="page-subtitle">أهلاً بكم في نظام إدارة مركز تحفيظ القرآن الكريم</p>
+    </div>
+    <span class="badge px-3 py-2" style="background:var(--bg-card);color:var(--gold);border:1px solid var(--border);font-size:.9rem">
+        ☪ @DateTime.Today.ToString("dd MMMM yyyy")
+    </span>
+</div>
+
+<!-- بطاقات الإحصائيات -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-white h-100" style="background:linear-gradient(135deg,#1a6b3a,#2d9a57)">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-4 fw-bold">@ViewBag.StudentCount</div>
+                    <div class="small opacity-75">إجمالي الطلاب</div>
+                </div>
+                <i class="bi bi-people fs-1 opacity-50"></i>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="Students" asp-action="Index" class="text-white text-decoration-none small">
+                    عرض الكل <i class="bi bi-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white h-100" style="background:linear-gradient(135deg,#0d47a1,#1976d2)">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-4 fw-bold">@ViewBag.TeacherCount</div>
+                    <div class="small opacity-75">المعلمون</div>
+                </div>
+                <i class="bi bi-person-badge fs-1 opacity-50"></i>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="Teachers" asp-action="Index" class="text-white text-decoration-none small">
+                    عرض الكل <i class="bi bi-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white h-100" style="background:linear-gradient(135deg,#7b4f00,#c8a84b)">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-4 fw-bold">@ViewBag.ClassroomCount</div>
+                    <div class="small opacity-75">الفصول الدراسية</div>
+                </div>
+                <i class="bi bi-door-open fs-1 opacity-50"></i>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="Classrooms" asp-action="Index" class="text-white text-decoration-none small">
+                    عرض الكل <i class="bi bi-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white h-100" style="background:linear-gradient(135deg,#4a1a6b,#7b3db5)">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fs-4 fw-bold">@ViewBag.GiftCount</div>
+                    <div class="small opacity-75">هدايا في المخزون</div>
+                </div>
+                <div style="font-size:2.5rem;opacity:.5">🎁</div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a asp-controller="Gifts" asp-action="Index" class="text-white text-decoration-none small">
+                    إدارة الهدايا <i class="bi bi-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Islamic divider -->
+<div class="islamic-divider mb-4">❧ &nbsp; ✦ &nbsp; ﷽ &nbsp; ✦ &nbsp; ❧</div>
+
+<!-- الإجراءات السريعة -->
+<div class="card mb-4">
+    <div class="card-header" style="color:var(--gold)">
+        <i class="bi bi-lightning-charge me-2"></i>الإجراءات السريعة
+    </div>
+    <div class="card-body">
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+            <a asp-controller="Students"    asp-action="Create"    class="btn btn-gold"><i class="bi bi-person-plus me-1"></i>إضافة طالب</a>
+            <a asp-controller="Teachers"    asp-action="Create"    class="btn btn-gold"><i class="bi bi-person-badge me-1"></i>إضافة معلم</a>
+            <a asp-controller="Classrooms"  asp-action="Create"    class="btn btn-gold"><i class="bi bi-plus-circle me-1"></i>فصل جديد</a>
+            <a asp-controller="Attendance"  asp-action="Create"    class="btn btn-gold"><i class="bi bi-calendar-plus me-1"></i>تسجيل حضور</a>
+            <a asp-controller="Memorization" asp-action="Create"   class="btn btn-gold"><i class="bi bi-bookmark-plus me-1"></i>إضافة حفظ</a>
+            <a asp-controller="Gifts"       asp-action="Distribute" class="btn btn-gold"><i class="bi bi-gift me-1"></i>توزيع هدية</a>
+        </div>
+    </div>
+</div>
+
+<!-- عن النظام -->
+<div class="card" style="border-right: 4px solid var(--gold) !important">
+    <div class="card-body">
+        <h5 style="color:var(--gold)"><i class="bi bi-info-circle me-2"></i>عن النظام ☪</h5>
+        <p style="color:var(--text-muted)">
+            يوفّر نظام إدارة مركز تحفيظ القرآن الكريم حلاً شاملاً لإدارة الطلاب والمعلمين
+            والفصول الدراسية وسجلات الحضور والحفظ وتوزيع الهدايا التحفيزية.
+        </p>
+        <div class="row text-center mt-3">
+            <div class="col-md-4">
+                <div style="font-size:2rem;color:var(--gold)">🗄️</div>
+                <p class="small mt-1" style="color:#fff">قاعدة بيانات SQL Server<br><small style="color:var(--text-muted)">محوّلة إلى 3NF</small></p>
+            </div>
+            <div class="col-md-4">
+                <div style="font-size:2rem;color:var(--gold)">⚙️</div>
+                <p class="small mt-1" style="color:#fff">ASP.NET Core MVC<br><small style="color:var(--text-muted)">Entity Framework Core</small></p>
+            </div>
+            <div class="col-md-4">
+                <div style="font-size:2rem;color:var(--gold)">🎨</div>
+                <p class="small mt-1" style="color:#fff">Bootstrap 5 + CSS<br><small style="color:var(--text-muted)">تصميم متجاوب</small></p>
+            </div>
+        </div>
+        <div class="text-center mt-3" style="color:var(--gold);letter-spacing:6px;font-size:1rem;opacity:.6">
+            ✦ &nbsp; ☾ &nbsp; ✦ &nbsp; ☽ &nbsp; ✦
+        </div>
+    </div>
+</div>

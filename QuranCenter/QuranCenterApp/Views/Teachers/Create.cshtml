@@ -1,0 +1,75 @@
+@{
+    ViewData["Title"] = "إضافة معلم";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-person-plus me-2" style="color:var(--gold)"></i>إضافة معلم جديد</h2>
+        <p class="page-subtitle">تسجيل بيانات المعلم في مركز التحفيظ</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-right me-1"></i>رجوع</a>
+</div>
+
+<div class="card">
+    <div class="card-header"><i class="bi bi-person-badge me-2" style="color:var(--gold)"></i>بيانات المعلم</div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mb-3">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div><i class="bi bi-exclamation-circle me-1"></i>@error.ErrorMessage</div>
+                    }
+                </div>
+            }
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">الاسم الأول <span class="text-danger">*</span></label>
+                    <input name="FirstName" class="form-control" placeholder="أدخل الاسم الأول" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">الاسم الأخير <span class="text-danger">*</span></label>
+                    <input name="LastName" class="form-control" placeholder="أدخل الاسم الأخير" required />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">الجنس <span class="text-danger">*</span></label>
+                    <select name="Gender" class="form-select">
+                        <option value="M">ذكر</option>
+                        <option value="F">أنثى</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">تاريخ الميلاد <span class="text-danger">*</span></label>
+                    <input name="DateOfBirth" type="date" lang="en-GB" dir="ltr" class="form-control" required />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">البريد الإلكتروني</label>
+                    <input name="Email" type="email" class="form-control" placeholder="example@quran.jo" dir="ltr" />
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label">العنوان</label>
+                    <input name="Address" class="form-control" placeholder="أدخل عنوان السكن" />
+                </div>
+            </div>
+
+            <hr class="my-4" style="border-color:var(--border)" />
+            <h6 style="color:var(--gold)" class="mb-3"><i class="bi bi-mortarboard me-2"></i>البيانات المهنية</h6>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">التخصص <span class="text-danger">*</span></label>
+                    <input name="Specialization" class="form-control" placeholder="مثال: تجويد القرآن الكريم" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">تاريخ التعيين <span class="text-danger">*</span></label>
+                    <input name="HireDate" type="date" lang="en-GB" dir="ltr" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-gold px-4"><i class="bi bi-save me-1"></i>حفظ المعلم</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+@model QuranCenterApp.Models.Supervisor
+@{
+    ViewData["Title"] = "تعديل بيانات المشرف";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-pencil-square me-2" style="color:var(--gold)"></i>تعديل بيانات المشرف</h2>
+        <p class="page-subtitle">@Model.Person.FirstName @Model.Person.LastName</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-right me-1"></i>رجوع</a>
+</div>
+
+<div class="card">
+    <div class="card-header"><i class="bi bi-pencil me-2" style="color:var(--gold)"></i>تعديل: @Model.Person.FirstName @Model.Person.LastName</div>
+    <div class="card-body">
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="SupervisorID" />
+            <input type="hidden" name="Person.PersonID" value="@Model.Person.PersonID" />
+
+            <h6 style="color:var(--gold)" class="mb-3"><i class="bi bi-person me-2"></i>البيانات الشخصية</h6>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">الاسم الأول <span class="text-danger">*</span></label>
+                    <input name="Person.FirstName" value="@Model.Person.FirstName" class="form-control" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">الاسم الأخير <span class="text-danger">*</span></label>
+                    <input name="Person.LastName" value="@Model.Person.LastName" class="form-control" required />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">الجنس</label>
+                    <select name="Person.Gender" class="form-select">
+                        <option value="M" selected="@(Model.Person.Gender == "M" ? "selected" : null)">ذكر</option>
+                        <option value="F" selected="@(Model.Person.Gender == "F" ? "selected" : null)">أنثى</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">تاريخ الميلاد <span class="text-danger">*</span></label>
+                    <input name="Person.DateOfBirth" type="date" lang="en-GB" dir="ltr" value="@Model.Person.DateOfBirth.ToString("yyyy-MM-dd")" class="form-control" required />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">البريد الإلكتروني</label>
+                    <input name="Person.Email" type="email" value="@Model.Person.Email" class="form-control" dir="ltr" />
+                </div>
+            </div>
+
+            <hr class="my-4" style="border-color:var(--border)" />
+            <h6 style="color:var(--gold)" class="mb-3"><i class="bi bi-shield-check me-2"></i>بيانات الإشراف</h6>
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <label class="form-label">القسم <span class="text-danger">*</span></label>
+                    <input asp-for="Department" class="form-control" required />
+                    <span asp-validation-for="Department" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-gold px-4"><i class="bi bi-save me-1"></i>تحديث</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>

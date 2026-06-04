@@ -1,0 +1,49 @@
+@model IEnumerable<QuranCenterApp.Models.Supervisor>
+@{
+    ViewData["Title"] = "المشرفون";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-shield-check me-2" style="color:var(--gold)"></i>المشرفون</h2>
+        <p class="page-subtitle">إدارة بيانات المشرفين</p>
+    </div>
+    <a asp-action="Create" class="btn btn-gold px-4">
+        <i class="bi bi-person-plus me-1"></i>إضافة مشرف
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>الاسم</th>
+                    <th>القسم</th>
+                    <th>البريد</th>
+                    <th>الفصول</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="5" class="text-center py-4" style="color:var(--text-muted)">لا يوجد مشرفون.</td></tr>
+                }
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td>@s.Person.FirstName @s.Person.LastName</td>
+                        <td>@s.Department</td>
+                        <td>@(s.Person.Email ?? "-")</td>
+                        <td><span class="badge" style="background:var(--bg-row);color:var(--gold)">@s.Classrooms.Count فصل</span></td>
+                        <td>
+                            <a asp-action="Edit"   asp-route-id="@s.SupervisorID" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a>
+                            <a asp-action="Delete" asp-route-id="@s.SupervisorID" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

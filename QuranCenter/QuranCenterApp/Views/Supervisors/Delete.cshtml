@@ -1,0 +1,16 @@
+@model QuranCenterApp.Models.Supervisor
+@{
+    ViewData["Title"] = "حذف مشرف";
+}
+<div class="card border-danger mt-4">
+    <div class="card-header bg-danger text-white">تأكيد الحذف</div>
+    <div class="card-body">
+        <p>هل أنت متأكد من حذف المشرف <strong>@Model.Person.FirstName @Model.Person.LastName</strong>؟</p>
+        <form asp-action="Delete" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="SupervisorID" />
+            <button type="submit" class="btn btn-danger">نعم، احذف</button>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-2">إلغاء</a>
+        </form>
+    </div>
+</div>

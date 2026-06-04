@@ -1,0 +1,34 @@
+@model QuranCenterApp.Models.Classroom
+@{
+    ViewData["Title"] = "حذف الفصل";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title"><i class="bi bi-trash me-2" style="color:#dc3545"></i>حذف الفصل</h2>
+        <p class="page-subtitle">@Model.ClassroomName</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-right me-1"></i>رجوع</a>
+</div>
+
+<div class="card" style="border-color:#dc3545">
+    <div class="card-header" style="background:#dc3545;color:#fff"><i class="bi bi-exclamation-triangle me-2"></i>تأكيد الحذف</div>
+    <div class="card-body">
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>هل أنت متأكد من حذف الفصل "<strong>@Model.ClassroomName</strong>"؟ لا يمكن التراجع عن هذا الإجراء.
+        </div>
+        <dl class="row">
+            <dt class="col-sm-3">المنهج</dt>
+            <dd class="col-sm-9">@Model.Curriculum?.CurriculumName</dd>
+            <dt class="col-sm-3">المعلم</dt>
+            <dd class="col-sm-9">@Model.Teacher?.Person?.FirstName @Model.Teacher?.Person?.LastName</dd>
+            <dt class="col-sm-3">الحد الأقصى</dt>
+            <dd class="col-sm-9">@Model.MaxSize طالب</dd>
+        </dl>
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="ClassroomID" />
+            <button type="submit" class="btn btn-danger px-4"><i class="bi bi-trash me-1"></i>نعم، احذف</button>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-2">إلغاء</a>
+        </form>
+    </div>
+</div>
