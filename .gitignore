@@ -1,43 +1,15 @@
-## .NET / ASP.NET Core
-bin/
-obj/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
+# Ignore everything at root level except this file and the project folder
+/*
+!/.gitignore
+!/QuranCenter/
 
-## Visual Studio
-.vs/
-*.rsuser
-*.vspx
-*.vspscc
+# Ignore everything in QuranCenter except QuranCenterApp and Database
+/QuranCenter/*
+!/QuranCenter/QuranCenterApp/
+!/QuranCenter/Database/
 
-## Build results
-[Dd]ebug/
-[Rr]elease/
-x64/
-x86/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
-
-## NuGet
-*.nupkg
-**/[Pp]ackages/
-!**/[Pp]ackages/build/
-*.nuget.props
-*.nuget.targets
-
-## OS
-.DS_Store
-Thumbs.db
-
-## Secrets / config overrides
-appsettings.Development.json
-appsettings.Local.json
-*.pfx
-*.p12
+# Ignore build artifacts inside the project
+QuranCenter/QuranCenterApp/bin/
+QuranCenter/QuranCenterApp/obj/
+QuranCenter/QuranCenterApp/.vs/
+QuranCenter/QuranCenterApp/appsettings.Development.json
