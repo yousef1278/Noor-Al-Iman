@@ -34,12 +34,12 @@
                     <input asp-for="MaxSize" type="number" min="1" class="form-control" required />
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">المنهج</label>
-                    <select asp-for="CurriculumID" asp-items="ViewBag.CurriculumID" class="form-select"></select>
-                </div>
-                <div class="col-md-4">
                     <label class="form-label">المعلم</label>
                     <select asp-for="TeacherID" asp-items="ViewBag.TeacherID" class="form-select"></select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">المنهج</label>
+                    <select asp-for="CurriculumID" asp-items="ViewBag.CurriculumID" class="form-select"></select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">المشرف (اختياري)</label>

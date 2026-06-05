@@ -112,7 +112,8 @@ CREATE TABLE Classroom (
     MaxSize         INT           NOT NULL CHECK (MaxSize > 0),
     CurriculumID    INT           NOT NULL REFERENCES Curriculum(CurriculumID),
     TeacherID       INT           NOT NULL REFERENCES Teacher(TeacherID),
-    SupervisorID    INT           NULL     REFERENCES Supervisor(SupervisorID)
+    SupervisorID    INT           NULL     REFERENCES Supervisor(SupervisorID),
+    RequiredLevel   NVARCHAR(20)  NOT NULL DEFAULT N'Beginner'
 );
 GO
 

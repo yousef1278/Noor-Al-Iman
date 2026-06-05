@@ -38,8 +38,9 @@
                         <td>@(s.Person.Email ?? "-")</td>
                         <td><span class="badge" style="background:var(--bg-row);color:var(--gold)">@s.Classrooms.Count فصل</span></td>
                         <td>
-                            <a asp-action="Edit"   asp-route-id="@s.SupervisorID" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a>
-                            <a asp-action="Delete" asp-route-id="@s.SupervisorID" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                            <a asp-action="Details" asp-route-id="@s.SupervisorID" class="btn btn-sm btn-outline-info me-1"><i class="bi bi-eye"></i></a>
+                            <a asp-action="Edit"    asp-route-id="@s.SupervisorID" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-pencil"></i></a>
+                            <a asp-action="Delete"  asp-route-id="@s.SupervisorID" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
                         </td>
                     </tr>
                 }

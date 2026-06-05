@@ -9,6 +9,54 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <style>
+        /* Choices.js dark theme */
+        .choices { margin-bottom: 0; }
+        .choices__inner {
+            background: var(--bg-row) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 6px !important;
+            min-height: 38px !important;
+            padding: 5px 12px !important;
+            font-family: 'Cairo', sans-serif !important;
+            font-size: .95rem !important;
+            color: var(--text-main) !important;
+            display: flex; align-items: center;
+        }
+        .choices.is-open .choices__inner,
+        .choices.is-focused .choices__inner {
+            border-color: var(--gold) !important;
+            box-shadow: 0 0 0 2px rgba(200,168,75,.2) !important;
+        }
+        .choices__list--dropdown,
+        .choices__list[aria-expanded] {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 0 0 6px 6px !important;
+            z-index: 9999 !important;
+            margin-top: 0 !important;
+        }
+        .choices__list--dropdown .choices__item,
+        .choices__list[aria-expanded] .choices__item {
+            color: var(--text-main) !important;
+            font-family: 'Cairo', sans-serif !important;
+            padding: 8px 14px !important;
+            font-size: .92rem !important;
+        }
+        .choices__list--dropdown .choices__item--selectable.is-highlighted,
+        .choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
+            background: rgba(200,168,75,.18) !important;
+            color: var(--gold) !important;
+        }
+        .choices__list--single .choices__item { color: var(--text-main) !important; }
+        .choices[data-type*="select-one"]::after {
+            border-color: var(--text-muted) transparent transparent !important;
+        }
+        .choices.is-open[data-type*="select-one"]::after {
+            border-color: transparent transparent var(--text-muted) !important;
+        }
+    </style>
     <style>
         :root {
             --bg-dark:    #0d2818;
@@ -165,6 +213,33 @@
         .btn-primary { background: var(--gold) !important; border-color: var(--gold) !important; color: var(--bg-dark) !important; font-weight: 600; }
         .btn-primary:hover { background: var(--gold-hover) !important; border-color: var(--gold-hover) !important; }
 
+        /* ── SKIP LINK (accessibility) ── */
+        .skip-link { position:absolute; top:-48px; right:0; background:var(--gold); color:var(--bg-dark); padding:10px 20px; z-index:9999; font-weight:700; border-radius:0 0 8px 8px; transition:top 200ms ease-out; text-decoration:none; }
+        .skip-link:focus { top:0; outline:none; }
+
+        /* ── FOCUS RINGS (accessibility) ── */
+        *:focus-visible { outline:2px solid var(--gold) !important; outline-offset:3px; border-radius:4px; }
+        button:focus-visible, a:focus-visible, [role="button"]:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline:2px solid var(--gold) !important; outline-offset:3px; }
+
+        /* ── TRANSITIONS (150–300ms per SKILL spec) ── */
+        .btn { transition: all 160ms ease-out !important; }
+        .btn:active { transform: scale(0.96) !important; }
+        .btn-sm { transition: all 150ms ease-out !important; }
+        .sidebar-menu li a { transition: color 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out !important; }
+        .card { transition: box-shadow 200ms ease-out, transform 200ms ease-out; }
+        .nav-links a { transition: color 150ms ease-out, background 150ms ease-out !important; }
+        .form-control, .form-select { transition: border-color 150ms ease-out, box-shadow 150ms ease-out !important; }
+        .table tbody tr { transition: background 120ms ease-out; }
+
+        /* ── TOUCH TARGETS: min 44×44px (SKILL critical) ── */
+        .btn-sm { min-height: 38px !important; min-width: 38px !important; display:inline-flex !important; align-items:center; justify-content:center; }
+
+        /* ── CURSOR ── */
+        .btn, [role="button"], .sidebar-menu li a, .nav-links a, .type-card, label[for] { cursor:pointer; }
+
+        /* ── LOADING BUTTON STATE ── */
+        .btn-loading { opacity:.75; pointer-events:none; }
+
         /* ── DATE INPUTS: flatpickr forces dd/mm/yyyy regardless of OS language ── */
         input[type="date"] { direction: ltr !important; text-align: left !important; font-family: monospace, sans-serif; }
         .flatpickr-input { direction: ltr !important; text-align: left !important; font-family: monospace, sans-serif; }
@@ -309,6 +384,8 @@
 </head>
 <body>
 
+<a href="#main-content" class="skip-link">تخطّ إلى المحتوى الرئيسي</a>
+
 <!-- TOP NAVBAR -->
 <div class="top-navbar">
     <div class="brand">
@@ -352,19 +429,19 @@
     </nav>
 
     <!-- MAIN -->
-    <main class="main-content">
+    <main class="main-content" id="main-content">
         @if (TempData["Success"] != null)
         {
-            <div class="alert alert-success alert-dismissible fade show mb-3">
+            <div class="alert alert-success alert-dismissible fade show mb-3" role="alert" aria-live="polite">
                 <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="إغلاق"></button>
             </div>
         }
         @if (TempData["Error"] != null)
         {
-            <div class="alert alert-danger alert-dismissible fade show mb-3">
+            <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert" aria-live="assertive">
                 <i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="إغلاق"></button>
             </div>
         }
         @RenderBody()
@@ -379,8 +456,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+
+    /* ── 1. FLATPICKR: dd/mm/yyyy on all devices ── */
     document.querySelectorAll('input[type="date"]').forEach(function (input) {
         flatpickr(input, {
             dateFormat: 'Y-m-d',
@@ -399,6 +479,95 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    /* ── 2. AUTO-DISMISS ALERTS after 4s (SKILL: toast-dismiss 3-5s) ── */
+    document.querySelectorAll('.alert-dismissible').forEach(function (el) {
+        setTimeout(function () {
+            var inst = bootstrap.Alert.getOrCreateInstance(el);
+            if (inst) inst.close();
+        }, 4000);
+    });
+
+    /* ── 3. ACTIVE SIDEBAR: highlight current section ── */
+    var path = window.location.pathname.toLowerCase();
+    document.querySelectorAll('.sidebar-menu li a').forEach(function (link) {
+        try {
+            var linkPath = new URL(link.href).pathname.toLowerCase();
+            if (linkPath !== '/' && path.startsWith(linkPath)) {
+                link.classList.add('active');
+            } else if (linkPath === '/' && path === '/') {
+                link.classList.add('active');
+            }
+        } catch(e) {}
+    });
+
+    /* ── 4. FORM LOADING STATE: spinner on submit (SKILL: loading-buttons) ── */
+    document.querySelectorAll('form').forEach(function (form) {
+        form.addEventListener('submit', function () {
+            var btn = form.querySelector('button[type="submit"]:not([data-no-loading])');
+            if (btn && !btn.disabled) {
+                btn.classList.add('btn-loading');
+                var orig = btn.innerHTML;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>' + orig;
+                setTimeout(function() {
+                    btn.classList.remove('btn-loading');
+                    btn.innerHTML = orig;
+                }, 8000);
+            }
+        });
+    });
+
+    /* ── 5. ARIA-LABELS on icon-only table buttons (SKILL: aria-labels) ── */
+    var iconLabels = {
+        'bi-pencil':      'تعديل',
+        'bi-trash':       'حذف',
+        'bi-eye':         'تفاصيل',
+        'bi-person-plus': 'تسجيل طالب',
+        'bi-person-dash': 'إلغاء التسجيل',
+        'bi-save':        'حفظ',
+        'bi-x-circle':    'إلغاء'
+    };
+    document.querySelectorAll('.btn-sm').forEach(function (btn) {
+        if (!btn.getAttribute('aria-label') && !btn.textContent.trim()) {
+            var icon = btn.querySelector('i[class]');
+            if (icon) {
+                for (var cls in iconLabels) {
+                    if (icon.classList.contains(cls)) {
+                        btn.setAttribute('aria-label', iconLabels[cls]);
+                        break;
+                    }
+                }
+            }
+        }
+    });
+
+    /* ── 6. KEYBOARD support for role="button" cards ── */
+    document.querySelectorAll('[role="button"]').forEach(function (el) {
+        el.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                el.click();
+            }
+        });
+    });
+
+    /* ── 7. CHOICES.JS: force dropdown to open downward ── */
+    if (typeof Choices !== 'undefined') {
+        document.querySelectorAll('select.form-select').forEach(function (el) {
+            if (el.dataset.choicesInit) return;
+            el.dataset.choicesInit = '1';
+            new Choices(el, {
+                searchEnabled:    false,
+                allowHTML:        false,
+                itemSelectText:   '',
+                position:         'bottom',
+                shouldSort:       false,
+                allowEmptyOption: true,
+                placeholder:      true
+            });
+        });
+    }
+
 });
 </script>
 @await RenderSectionAsync("Scripts", required: false)

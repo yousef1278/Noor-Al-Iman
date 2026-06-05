@@ -19,6 +19,22 @@ public class SupervisorsController : Controller
         return View(supervisors);
     }
 
+    public async Task<IActionResult> Details(int id)
+    {
+        var s = await _db.Supervisors
+            .Include(x => x.Person)
+            .Include(x => x.Classrooms)
+                .ThenInclude(c => c.Curriculum)
+            .Include(x => x.Classrooms)
+                .ThenInclude(c => c.Teacher).ThenInclude(t => t.Person)
+            .Include(x => x.Classrooms)
+                .ThenInclude(c => c.Enrollments)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.SupervisorID == id);
+        if (s == null) return NotFound();
+        return View(s);
+    }
+
     public IActionResult Create() => View();
 
     public async Task<IActionResult> Edit(int id)

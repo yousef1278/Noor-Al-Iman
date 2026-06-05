@@ -74,7 +74,7 @@
                     <div class="fs-4 fw-bold">@ViewBag.GiftCount</div>
                     <div class="small opacity-75">هدايا في المخزون</div>
                 </div>
-                <div style="font-size:2.5rem;opacity:.5">🎁</div>
+                <i class="bi bi-gift fs-1 opacity-50"></i>
             </div>
             <div class="card-footer bg-transparent border-0">
                 <a asp-controller="Gifts" asp-action="Index" class="text-white text-decoration-none small">
@@ -105,30 +105,106 @@
     </div>
 </div>
 
-<!-- عن النظام -->
+<!-- تواصل معنا -->
 <div class="card" style="border-right: 4px solid var(--gold) !important">
+    <div class="card-header">
+        <i class="bi bi-chat-heart me-2" style="color:var(--gold)"></i>تواصل معنا
+    </div>
     <div class="card-body">
-        <h5 style="color:var(--gold)"><i class="bi bi-info-circle me-2"></i>عن النظام ☪</h5>
-        <p style="color:var(--text-muted)">
-            يوفّر نظام إدارة مركز تحفيظ القرآن الكريم حلاً شاملاً لإدارة الطلاب والمعلمين
-            والفصول الدراسية وسجلات الحضور والحفظ وتوزيع الهدايا التحفيزية.
-        </p>
-        <div class="row text-center mt-3">
+
+        <!-- نوع الرسالة -->
+        <div class="row g-3 mb-4">
             <div class="col-md-4">
-                <div style="font-size:2rem;color:var(--gold)">🗄️</div>
-                <p class="small mt-1" style="color:#fff">قاعدة بيانات SQL Server<br><small style="color:var(--text-muted)">محوّلة إلى 3NF</small></p>
+                <div class="type-card p-3 text-center rounded" id="card-support" onclick="selectType('support')"
+                     role="button" tabindex="0" aria-label="دعم تقني"
+                     style="border:2px solid var(--border);cursor:pointer;transition:all 200ms ease-out;background:var(--bg-row)">
+                    <i class="bi bi-tools" style="font-size:2rem;color:var(--gold)"></i>
+                    <div style="color:#fff;font-weight:600;margin-top:6px">دعم تقني</div>
+                    <div style="color:var(--text-muted);font-size:.8rem">مشكلة أو خطأ في النظام</div>
+                </div>
             </div>
             <div class="col-md-4">
-                <div style="font-size:2rem;color:var(--gold)">⚙️</div>
-                <p class="small mt-1" style="color:#fff">ASP.NET Core MVC<br><small style="color:var(--text-muted)">Entity Framework Core</small></p>
+                <div class="type-card p-3 text-center rounded" id="card-idea" onclick="selectType('idea')"
+                     role="button" tabindex="0" aria-label="اقتراح فكرة"
+                     style="border:2px solid var(--border);cursor:pointer;transition:all 200ms ease-out;background:var(--bg-row)">
+                    <i class="bi bi-lightbulb" style="font-size:2rem;color:var(--gold)"></i>
+                    <div style="color:#fff;font-weight:600;margin-top:6px">اقتراح فكرة</div>
+                    <div style="color:var(--text-muted);font-size:.8rem">تحسين أو ميزة جديدة</div>
+                </div>
             </div>
             <div class="col-md-4">
-                <div style="font-size:2rem;color:var(--gold)">🎨</div>
-                <p class="small mt-1" style="color:#fff">Bootstrap 5 + CSS<br><small style="color:var(--text-muted)">تصميم متجاوب</small></p>
+                <div class="type-card p-3 text-center rounded" id="card-complaint" onclick="selectType('complaint')"
+                     role="button" tabindex="0" aria-label="شكوى"
+                     style="border:2px solid var(--border);cursor:pointer;transition:all 200ms ease-out;background:var(--bg-row)">
+                    <i class="bi bi-megaphone" style="font-size:2rem;color:var(--gold)"></i>
+                    <div style="color:#fff;font-weight:600;margin-top:6px">شكوى</div>
+                    <div style="color:var(--text-muted);font-size:.8rem">ملاحظة أو تظلّم</div>
+                </div>
             </div>
         </div>
-        <div class="text-center mt-3" style="color:var(--gold);letter-spacing:6px;font-size:1rem;opacity:.6">
-            ✦ &nbsp; ☾ &nbsp; ✦ &nbsp; ☽ &nbsp; ✦
+
+        <!-- نموذج الرسالة -->
+        <div id="feedback-form" style="display:none">
+            <div class="mb-3">
+                <label class="form-label">الاسم (اختياري)</label>
+                <input type="text" id="fb-name" class="form-control" placeholder="اسمك" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">الرسالة <span class="text-danger">*</span></label>
+                <textarea id="fb-message" class="form-control" rows="4" placeholder="اكتب رسالتك هنا..."></textarea>
+            </div>
+            <button class="btn btn-gold px-4" onclick="submitFeedback()">
+                <i class="bi bi-send me-1"></i>إرسال
+            </button>
+            <button class="btn btn-outline-secondary ms-2" onclick="cancelFeedback()">إلغاء</button>
         </div>
+
+        <!-- رسالة النجاح -->
+        <div id="feedback-success" style="display:none" class="text-center py-4" role="status" aria-live="polite">
+            <i class="bi bi-check-circle-fill" style="font-size:3rem;color:var(--gold)"></i>
+            <h5 style="color:var(--gold)" class="mt-2">شكراً لتواصلك معنا!</h5>
+            <p style="color:var(--text-muted)">تم استلام رسالتك وسنرد عليك في أقرب وقت.</p>
+            <button class="btn btn-outline-secondary btn-sm" onclick="resetFeedback()">إرسال رسالة أخرى</button>
+        </div>
+
     </div>
 </div>
+
+<script>
+var selectedType = '';
+function selectType(type) {
+    selectedType = type;
+    ['support','idea','complaint'].forEach(function(t) {
+        var c = document.getElementById('card-' + t);
+        c.style.borderColor = (t === type) ? 'var(--gold)' : 'var(--border)';
+        c.style.background  = (t === type) ? 'rgba(200,168,75,.15)' : 'var(--bg-row)';
+    });
+    document.getElementById('feedback-form').style.display = 'block';
+    document.getElementById('feedback-success').style.display = 'none';
+}
+function submitFeedback() {
+    var msg = document.getElementById('fb-message').value.trim();
+    if (!msg) { alert('الرجاء كتابة رسالتك أولاً'); return; }
+    document.getElementById('feedback-form').style.display = 'none';
+    document.getElementById('feedback-success').style.display = 'block';
+}
+function cancelFeedback() {
+    document.getElementById('feedback-form').style.display = 'none';
+    resetTypeCards();
+}
+function resetFeedback() {
+    document.getElementById('feedback-success').style.display = 'none';
+    document.getElementById('fb-name').value = '';
+    document.getElementById('fb-message').value = '';
+    document.getElementById('feedback-form').style.display = 'none';
+    resetTypeCards();
+}
+function resetTypeCards() {
+    ['support','idea','complaint'].forEach(function(t) {
+        var c = document.getElementById('card-' + t);
+        c.style.borderColor = 'var(--border)';
+        c.style.background  = 'var(--bg-row)';
+    });
+    selectedType = '';
+}
+</script>
